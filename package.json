@@ -1,0 +1,24 @@
+{
+  "name": "todoapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodecoolGlobal/todomvc-java-csillaurban.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodecoolGlobal/todomvc-java-csillaurban/issues"
+  },
+  "homepage": "https://github.com/CodecoolGlobal/todomvc-java-csillaurban#readme",
+  "dependencies": {
+    "@types/auth0-js": "^8.11.11",
+    "auth0-js": "^9.10.1",
+    "bootstrap": "^4.3.1"
+  }
+}
