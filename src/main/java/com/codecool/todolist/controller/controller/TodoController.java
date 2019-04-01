@@ -7,19 +7,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
+@Component
 public class TodoController {
     private static final String SUCCESS = "{\"success\":true}";
 
     @Autowired
     private TodoRepository todoRepository;
 
-    @PostMapping("/addTodo")
+    @RequestMapping(value="/addTodo", method=RequestMethod.POST)
+    @ResponseBody
     public String addTodo(@RequestParam("todo-title") String title) {
         Todo todo = Todo.builder()
                 .title(title)
@@ -29,15 +33,17 @@ public class TodoController {
         return SUCCESS;
     }
 
-    @PostMapping("/list")
+    @RequestMapping(value="/list", method=
+            RequestMethod.POST )
+    @ResponseBody
     public String listTodos(@RequestParam("status") String status) {
         JSONArray todos = new JSONArray();
         List<Todo> todoList = new ArrayList<>();
 
         if(status.isEmpty()) {
-            todoList = todoRepository.findAndOrderById();
+            todoList.addAll(todoRepository.findAndOrderById());
         } else {
-            todoList = todoRepository.findAllByStatusOrderById(Status.valueOf(status.toUpperCase()));
+            todoList.addAll(todoRepository.findAllByStatusOrderById(Status.valueOf(status.toUpperCase())));
         }
 
         for (Todo todo: todoList
@@ -60,13 +66,14 @@ public class TodoController {
         return todos.toString();
     }
 
-    @DeleteMapping("/todos/completed")
+    @RequestMapping(value="/todos/completed", method=RequestMethod.DELETE)
     public String removeCompleted() {
         todoRepository.removeTodosByStatusEquals(Status.COMPLETE);
         return SUCCESS;
     }
 
-    @PutMapping("/todos/toggle_all")
+    @RequestMapping(value="/todos/toggle_all", method=RequestMethod.PUT)
+    @ResponseBody
     public String toggleAll(@RequestParam("toggle-all") String complete) {
         boolean completed = complete.equals("true");
         List<Todo> todos = todoRepository.findAll();
@@ -78,24 +85,28 @@ public class TodoController {
         return SUCCESS;
     }
 
-    @DeleteMapping("/todos/{id}")
+    @RequestMapping(value="/todos/{id}", method=RequestMethod.DELETE)
+    @ResponseBody
     public String removeById(@PathVariable("id") Long id) {
         todoRepository.removeTodoById(id);
         return SUCCESS;
     }
 
-    @PutMapping("/todos/{id}")
+    @RequestMapping(value="/todos/{id}", method=RequestMethod.PUT)
+    @ResponseBody
     public String updateById(@PathVariable("id") Long id, @RequestParam("todo-title") String title) {
         todoRepository.updateTitle(id, title);
         return SUCCESS;
     }
 
-    @GetMapping("/todos/{id}")
+    @RequestMapping(value="/todos/{id}", method=RequestMethod.GET)
+    @ResponseBody
     public String findTodoById(@PathVariable("id") Long id) {
         return todoRepository.findTodoById(id).getTitle();
     }
 
-    @PutMapping("/todos/{id}/toggle_status")
+    @RequestMapping(value="/todos/{id}/toggle_status", method=RequestMethod.PUT)
+    @ResponseBody
     public String toggleStatusById(@PathVariable("id") Long id, @RequestParam("status") String status) {
         boolean completed = status.equals("true");
         if(completed) {

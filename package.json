@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/auth0-js": "^8.11.11",
     "auth0-js": "^9.10.1",
-    "bootstrap": "^4.3.1"
+    "bootstrap": "^4.3.1",
+    "npm-upgrade": "^1.4.1"
   }
 }

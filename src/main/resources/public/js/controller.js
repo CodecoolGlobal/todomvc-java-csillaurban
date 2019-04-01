@@ -1,5 +1,4 @@
 class Controller {
-
     /**
      * @param {!View} view A View instance
      */
@@ -30,6 +29,7 @@ class Controller {
 
     updateState(newState) {
         this._activeState = newState;
+        console.log("refresh was called")
         this._refresh();
         this.view.updateFilterButtons(newState);
     }
@@ -53,8 +53,13 @@ class Controller {
             console.log("Request failed for " + endpoint + " error: " + err);
         });
         req.open(method, endpoint);
+        console.log("session storage in ajax: " + sessionStorage.getItem("accessToken"))
         if (method === Controller.POST || method === Controller.PUT) {
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            req.setRequestHeader(
+                'Authorization',
+                'Bearer ' + sessionStorage.getItem("accessToken")
+            );
         }
         req.send(params);
     }
@@ -143,6 +148,7 @@ class Controller {
         if (force || this._lastActiveState !== '' || this._lastActiveState !== state) {
             // an item looks like: {id:abc, title:"something", completed:true}
             this.sendAjax("list", Controller.POST, "status=" + state, function (event) {
+                console.log("list")
                 const respObj = JSON.parse(event.target.response);
 
                 this.view.showItems(respObj);
